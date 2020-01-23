@@ -25,7 +25,7 @@ import java.security.MessageDigest;
 
 public class SignIn extends AppCompatActivity {
 
-    MaterialEditText edtPhone,edtPassword;
+    MaterialEditText edtBusinessNumber, edtName, edtPassword;
     Button btnSignIn;
 
 
@@ -34,14 +34,14 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        edtPassword = (MaterialEditText)findViewById(R.id.edtPassword);
-        edtPhone = (MaterialEditText)findViewById(R.id.edtPhone);
-        btnSignIn = (Button)findViewById(R.id.btnSignIn);
-
+        edtBusinessNumber = (MaterialEditText) findViewById(R.id.edtBusinessNumber);
+        edtName = (MaterialEditText) findViewById(R.id.edtName);
+        edtPassword = (MaterialEditText) findViewById(R.id.edtPassword);
+        btnSignIn = (Button) findViewById(R.id.btnSignIn);
 
         //Int Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("User");
+        final DatabaseReference table_user = database.getReference("RestaurantGenie");
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,14 +55,14 @@ public class SignIn extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         //Chech if user not exist in database
-                        if (dataSnapshot.child(edtPhone.getText().toString()).exists()) {
+                        if (dataSnapshot.child(edtBusinessNumber.getText().toString()).exists()) {
                             // Get user information
                             mDialog.dismiss();
-                            User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
-                            user.setPhone(edtPhone.getText().toString());
+                            User user = dataSnapshot.child(edtBusinessNumber.getText().toString()).child("Worker").child("Manager").getValue(User.class);
+                            user.setBusinessNumber(edtBusinessNumber.getText().toString());
                             if (user.getPassword().equals(edtPassword.getText().toString())) {
                                 {
-                                    Intent homeIntent = new Intent(SignIn.this,Home.class);
+                                    Intent homeIntent = new Intent(SignIn.this, Home.class);
                                     Common.currentUser = user;
                                     startActivity(homeIntent);
                                     finish();

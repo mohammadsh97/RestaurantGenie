@@ -19,7 +19,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class SignUp extends AppCompatActivity {
 
-    MaterialEditText edtPhone, edtName,edtPassword;
+    MaterialEditText edtBusinessNumber, edtEmail, edtPhone, edtName, edtPassword, edtPasswordverification;
     Button btnSignUp;
 
     @Override
@@ -27,15 +27,16 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        edtName = (MaterialEditText)findViewById(R.id.edtName);
-        edtPhone = (MaterialEditText)findViewById(R.id.edtPhone);
-        edtPassword = (MaterialEditText)findViewById(R.id.edtPassword);
-
-        btnSignUp = (Button)findViewById(R.id.btnSignUp);
+        edtBusinessNumber = (MaterialEditText) findViewById(R.id.edtBusinessNumber);
+        edtEmail = (MaterialEditText) findViewById(R.id.edtEmail);
+        edtPhone = (MaterialEditText) findViewById(R.id.edtPhone);
+        edtName = (MaterialEditText) findViewById(R.id.edtName);
+        edtPassword = (MaterialEditText) findViewById(R.id.edtPassword);
+        btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
         //Int Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("User");
+        final DatabaseReference table_user = database.getReference("RestaurantGenie");
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,15 +49,14 @@ public class SignUp extends AppCompatActivity {
                 table_user.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //Check if already user phone
-                        if (dataSnapshot.child(edtPhone.getText().toString()).exists()){
+                        //Check if already Business Number
+                        if (dataSnapshot.child(edtBusinessNumber.getText().toString()).exists()) {
                             mDialog.dismiss();
-                            Toast.makeText(SignUp.this, "Phone Number already register", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                            Toast.makeText(SignUp.this, "Business Number already register", Toast.LENGTH_SHORT).show();
+                        } else {
                             mDialog.dismiss();
-                            User user = new User(edtName.getText().toString() ,edtPassword.getText().toString(),edtPhone.getText().toString());
-                            table_user.child(edtPhone.getText().toString()).setValue(user);
+                            User user = new User(edtBusinessNumber.getText().toString(), edtEmail.getText().toString(), edtPhone.getText().toString(), edtName.getText().toString(), edtPassword.getText().toString());
+                            table_user.child(edtBusinessNumber.getText().toString()).child("Worker").child("Manager").setValue(user);
                             Toast.makeText(SignUp.this, "sign up successfully !", Toast.LENGTH_SHORT).show();
                             finish();
                         }
