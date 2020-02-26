@@ -54,7 +54,7 @@ public class SignIn extends AppCompatActivity {
                 table_user.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //Chech if user not exist in database
+                        //Chech if user not exist in databases
                         if (dataSnapshot.child(edtBusinessNumber.getText().toString()).exists()) {
                             // Get user information
                             mDialog.dismiss();
