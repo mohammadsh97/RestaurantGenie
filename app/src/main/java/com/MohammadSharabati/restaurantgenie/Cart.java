@@ -64,7 +64,8 @@ public class Cart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Create new Request
-                showAlertDialog();
+                if (cart.size() > 0)
+                    showAlertDialog();
             }
         });
 
@@ -105,7 +106,6 @@ public class Cart extends AppCompatActivity {
                 new Database(getBaseContext()).cleanCart();
                 Toast.makeText(Cart.this, "Thank you, order place", Toast.LENGTH_SHORT).show();
                 finish();
-
 
             }
         });

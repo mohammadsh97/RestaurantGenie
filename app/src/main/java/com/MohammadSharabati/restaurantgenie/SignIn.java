@@ -66,6 +66,7 @@ public class SignIn extends AppCompatActivity {
                                     Common.currentUser = user;
                                     startActivity(homeIntent);
                                     finish();
+                                    table_user.removeEventListener(this);
                                 }
                             } else
                                 Toast.makeText(SignIn.this, "Wrong Password !!!", Toast.LENGTH_SHORT).show();
