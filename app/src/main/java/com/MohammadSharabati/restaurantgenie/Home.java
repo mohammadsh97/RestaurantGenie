@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.MohammadSharabati.restaurantgenie.Common.Common;
+import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.Model.Category;
 import com.MohammadSharabati.restaurantgenie.ViewHolder.MenuViewHolder;
@@ -42,7 +43,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerOptions<Category> options;
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
-    final ArrayList<Category> categoryList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,26 +129,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (adapter != null)
-            adapter.startListening();
-    }
-
-    @Override
-    protected void onStop() {
-        if (adapter != null)
-            adapter.stopListening();
-        super.onStop();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (adapter != null)
-            adapter.startListening();
-    }
 
     @Override
     public void onBackPressed() {
@@ -172,7 +152,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 
@@ -183,17 +162,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (id == R.id.nav_menu) {
 
-            Intent cartIntent = new Intent(Home.this, Home.class);
-            startActivity(cartIntent);
-
         } else if (id == R.id.nav_cart) {
             Intent cartIntent = new Intent(Home.this, Cart.class);
-            cartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(cartIntent);
 
         } else if (id == R.id.nav_orders) {
             Intent orderIntent = new Intent(Home.this, OrderStatus.class);
-            orderIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(orderIntent);
 
         } else if (id == R.id.nav_log_out) {
@@ -207,4 +181,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

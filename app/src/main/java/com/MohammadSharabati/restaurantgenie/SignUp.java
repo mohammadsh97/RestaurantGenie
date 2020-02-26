@@ -19,7 +19,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class SignUp extends AppCompatActivity {
 
-    MaterialEditText edtBusinessNumber, edtEmail, edtPhone, edtName, edtPassword, edtPasswordverification;
+    MaterialEditText edtBusinessNumber, edtEmail, edtPhone, edtName, edtPassword;
     Button btnSignUp;
 
     @Override
@@ -67,8 +67,6 @@ public class SignUp extends AppCompatActivity {
 
                     }
                 });
-
-
             }
         });
     }
