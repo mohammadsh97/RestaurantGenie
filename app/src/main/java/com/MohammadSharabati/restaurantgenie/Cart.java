@@ -67,7 +67,7 @@ public class Cart extends AppCompatActivity {
     private void showAlertDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("One more step!");
-        alertDialog.setMessage("Enter your address: ");
+        alertDialog.setMessage("Enter your address:");
 
         final EditText edtAddress = new EditText(Cart.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -101,7 +101,6 @@ public class Cart extends AppCompatActivity {
 
             }
         });
-
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -109,23 +108,25 @@ public class Cart extends AppCompatActivity {
             }
         });
         alertDialog.show();
-
     }
 
     private void loadListFood() {
         cart = new Database(this).getCarts();
         adapter = new CartAdapter(cart, this);
-//        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
         //Calculate total price
         int total = 0;
-        for (Order order : cart)
-            total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
+        for (Order order : cart) {
+            try {
+                total += ((Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity())));
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
 
         Locale locale = new Locale("en", "US");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-
         txtTotalPlace.setText(fmt.format(total));
     }
 }
