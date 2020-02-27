@@ -3,7 +3,9 @@ package com.MohammadSharabati.restaurantgenie;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -53,10 +55,31 @@ public class SignUp extends AppCompatActivity {
                             Toast.makeText(SignUp.this, "Business Number already register", Toast.LENGTH_SHORT).show();
                         } else {
                             mDialog.dismiss();
-                            User user = new User(edtBusinessNumber.getText().toString(), edtEmail.getText().toString(), edtPhone.getText().toString(), edtName.getText().toString(), edtPassword.getText().toString());
-                            table_user.child(edtBusinessNumber.getText().toString()).child("Worker").child("Manager").setValue(user);
-                            Toast.makeText(SignUp.this, "sign up successfully !", Toast.LENGTH_SHORT).show();
-                            finish();
+                            if(edtPhone.getText().toString().length()>10)
+                            {
+                                Toast.makeText(SignUp.this, "You must enter phone number to register!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (TextUtils.isEmpty(edtBusinessNumber.getText().toString())){
+                                Toast.makeText(SignUp.this, "You must enter Business Number to register!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if ( TextUtils.isEmpty(edtEmail.getText().toString()) ){
+                                Toast.makeText(SignUp.this, "You must enter Email to register!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (TextUtils.isEmpty(edtPhone.getText().toString())){
+                                Toast.makeText(SignUp.this, "You must enter Phone number to register!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (TextUtils.isEmpty(edtName.getText().toString())){
+                                Toast.makeText(SignUp.this, "You must enter Name to register!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (TextUtils.isEmpty(edtPassword.getText().toString())){
+                                Toast.makeText(SignUp.this, "You must enter Password to register!", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                User user = new User(edtBusinessNumber.getText().toString(), edtEmail.getText().toString(), edtPhone.getText().toString(), edtName.getText().toString(), edtPassword.getText().toString());
+                                table_user.child(edtBusinessNumber.getText().toString()).child("Worker").child("Manager").setValue(user);
+                                Toast.makeText(SignUp.this, "sign up successfully !", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
                         }
                     }
 
