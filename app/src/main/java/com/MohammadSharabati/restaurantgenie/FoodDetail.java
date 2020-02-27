@@ -2,7 +2,6 @@ package com.MohammadSharabati.restaurantgenie;
 
 import androidx.appcompat.app.AppCompatActivity;
 import info.hoang8f.widget.FButton;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Model.Food;
 import com.MohammadSharabati.restaurantgenie.Model.Order;
@@ -25,40 +22,28 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import com.stepstone.apprating.listener.RatingDialogListener;
 
-import org.jetbrains.annotations.NotNull;
 
-public class FoodDetail extends AppCompatActivity implements RatingDialogListener {
+public class FoodDetail extends AppCompatActivity {
 
     private TextView food_name, food_price, food_description;
     private ImageView food_image;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private FloatingActionButton btnRating;
     private CounterFab btnCart;
     private ElegantNumberButton numberButton;
-    private RatingBar ratingBar;
-
     private String foodId = "";
-
     private FirebaseDatabase database;
     private DatabaseReference foods;
-    private DatabaseReference ratingTbl;
-
     private Food currentFood;
-
-    private FButton btnShowComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_detail);
 
-
         //Init Firebase
         database = FirebaseDatabase.getInstance();
         foods = database.getReference("Foods");
-
 
         //Init View
         numberButton = (ElegantNumberButton) findViewById(R.id.number_button);
@@ -67,11 +52,11 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("foodId is" , foodId);
-                Log.v("getName is" , currentFood.getName());
-                Log.v("getNumber is" , numberButton.getNumber());
-                Log.v("getPrice is" , currentFood.getPrice());
-                Log.v("getDiscount is" , currentFood.getDiscount());
+                Log.v("foodId is", foodId);
+                Log.v("getName is", currentFood.getName());
+                Log.v("getNumber is", numberButton.getNumber());
+                Log.v("getPrice is", currentFood.getPrice());
+                Log.v("getDiscount is", currentFood.getDiscount());
                 new Database(getBaseContext()).addToCart(new Order(
                         foodId,
                         currentFood.getName(),
@@ -125,15 +110,5 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
             }
         });
-    }
-
-    @Override
-    public void onNegativeButtonClicked() {
-
-    }
-
-    @Override
-    public void onPositiveButtonClicked(int i, @NotNull String s) {
-
     }
 }

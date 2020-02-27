@@ -25,8 +25,8 @@ import java.security.MessageDigest;
 
 public class SignIn extends AppCompatActivity {
 
-    MaterialEditText edtBusinessNumber, edtName, edtPassword;
-    Button btnSignIn;
+    private MaterialEditText edtBusinessNumber, edtName, edtPassword;
+    private Button btnSignIn;
 
 
     @Override

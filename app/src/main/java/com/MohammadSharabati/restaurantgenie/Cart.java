@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import info.hoang8f.widget.FButton;
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Model.Order;
@@ -21,7 +19,6 @@ import com.MohammadSharabati.restaurantgenie.Model.Request;
 import com.MohammadSharabati.restaurantgenie.ViewHolder.CartAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +28,6 @@ public class Cart extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-
     private FirebaseDatabase database;
     private DatabaseReference requests;
     public TextView txtTotalPlace;
@@ -39,13 +35,10 @@ public class Cart extends AppCompatActivity {
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-
 
         //Init Firebase
         database = FirebaseDatabase.getInstance();
@@ -56,11 +49,10 @@ public class Cart extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
         txtTotalPlace = (TextView) findViewById(R.id.total);
         btnPlace = (FButton) findViewById(R.id.btnPlaceOrder);
 
-                btnPlace.setOnClickListener(new View.OnClickListener() {
+        btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Create new Request

@@ -4,12 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Toast;
 import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.Model.OrderViewHolder;
@@ -24,10 +23,8 @@ public class OrderStatus extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference requests;
-
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-
     private FirebaseRecyclerAdapter<Request, OrderViewHolder> adapter;
 
     @Override
@@ -65,7 +62,7 @@ public class OrderStatus extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull OrderViewHolder viewHolder, int position, @NonNull Request model) {
+            protected void onBindViewHolder(@NonNull OrderViewHolder viewHolder, int position, @NonNull final Request model) {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
                 viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
                 viewHolder.txtOrderAddress.setText(model.getAddress());
@@ -74,7 +71,7 @@ public class OrderStatus extends AppCompatActivity {
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-//                        Toast.makeText(OrderStatus.this, "Uh?", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OrderStatus.this, "your order status is: "+Common.convertCodeToStatus(model.getStatus()), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

@@ -1,13 +1,11 @@
 package com.MohammadSharabati.restaurantgenie.Model;
 
-import android.view.ContextMenu;
 import android.view.View;
 import android.widget.TextView;
-
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.R;
-
 import androidx.recyclerview.widget.RecyclerView;
+
 
 public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

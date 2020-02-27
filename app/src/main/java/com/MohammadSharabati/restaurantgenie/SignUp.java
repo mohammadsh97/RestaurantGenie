@@ -2,13 +2,11 @@ package com.MohammadSharabati.restaurantgenie;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.MohammadSharabati.restaurantgenie.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,8 +17,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class SignUp extends AppCompatActivity {
 
-    MaterialEditText edtBusinessNumber, edtEmail, edtPhone, edtName, edtPassword;
-    Button btnSignUp;
+    private MaterialEditText edtBusinessNumber, edtEmail, edtPhone, edtName, edtPassword;
+    private Button btnSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

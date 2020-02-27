@@ -14,9 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.Model.Food;
 import com.MohammadSharabati.restaurantgenie.ViewHolder.FoodViewHolder;
@@ -29,17 +26,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mancj.materialsearchbar.MaterialSearchBar;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class FoodList extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
     private FirebaseDatabase database;
     private DatabaseReference foodList;
     private String categoryId = "";
@@ -50,7 +45,6 @@ public class FoodList extends AppCompatActivity {
     private List<String> suggestList = new ArrayList<>();
     private MaterialSearchBar materialSearchBar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,27 +53,17 @@ public class FoodList extends AppCompatActivity {
         //firebase
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("Foods");
-
         recyclerView = findViewById(R.id.recycler_food);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
 
         //Get Intent here
         if (getIntent() != null)
             categoryId = getIntent().getStringExtra("CategoryId");
 
         if (!categoryId.isEmpty() && categoryId != null) {
-
             loadListFood(categoryId);
-
-//            if (Common.isConnectedToInternet(getBaseContext()))
-//                loadListFood(categoryId);
-//            else {
-//                Toast.makeText(FoodList.this, "인터넷 연결을 확인하세요 !", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
         }
 
         //Search function need Category
@@ -247,22 +231,5 @@ public class FoodList extends AppCompatActivity {
             }
         });
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
-        if (searchAdapter != null)
-            searchAdapter.stopListening();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (adapter != null)
-            adapter.startListening();
-        if (searchAdapter != null)
-            searchAdapter.startListening();
     }
 }
