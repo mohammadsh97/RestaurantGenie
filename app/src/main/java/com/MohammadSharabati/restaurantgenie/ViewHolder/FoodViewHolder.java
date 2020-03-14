@@ -9,6 +9,10 @@ import com.MohammadSharabati.restaurantgenie.R;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Created by Mohammad Sharabati.
+ * Building item on Food List
+ */
 public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public TextView food_name, food_price;
     public ImageView food_image, fav_image, share_image, quickCart;

@@ -16,6 +16,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+
+/**
+ * Checking when user sign up
+ */
 public class SignUp extends AppCompatActivity {
 
     private MaterialEditText edtBusinessNumber, edtEmail, edtPhone, edtName, edtPassword;
@@ -75,7 +79,7 @@ public class SignUp extends AppCompatActivity {
                             }
                             else {
                                 User user = new User(edtBusinessNumber.getText().toString(), edtEmail.getText().toString(), edtPhone.getText().toString(), edtName.getText().toString(), edtPassword.getText().toString());
-                                table_user.child(edtBusinessNumber.getText().toString()).child("Worker").child("Manager").setValue(user);
+                                table_user.child(edtBusinessNumber.getText().toString()).child("Worker").child("Table").setValue(user);
                                 Toast.makeText(SignUp.this, "sign up successfully !", Toast.LENGTH_SHORT).show();
                                 finish();
                             }

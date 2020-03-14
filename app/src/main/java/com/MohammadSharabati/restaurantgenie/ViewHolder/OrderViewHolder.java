@@ -1,4 +1,4 @@
-package com.MohammadSharabati.restaurantgenie.Model;
+package com.MohammadSharabati.restaurantgenie.ViewHolder;
 
 import android.view.View;
 import android.widget.TextView;

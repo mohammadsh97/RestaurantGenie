@@ -85,7 +85,9 @@ public class FoodDetail extends AppCompatActivity {
 
         }
     }
-
+    /**
+     * setting food details (image, name, price, description)
+     */
     private void getDetailFood(String foodId) {
         foods.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override

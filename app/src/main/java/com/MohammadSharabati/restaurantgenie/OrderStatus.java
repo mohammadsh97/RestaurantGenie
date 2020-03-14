@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
-import com.MohammadSharabati.restaurantgenie.Model.OrderViewHolder;
+import com.MohammadSharabati.restaurantgenie.ViewHolder.OrderViewHolder;
 import com.MohammadSharabati.restaurantgenie.Model.Request;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -41,9 +41,13 @@ public class OrderStatus extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        
+
         loadOrders(Common.currentUser.getPhone());
-        }
+    }
+
+    /**
+     * Loading order status
+     */
     private void loadOrders(String phone) {
 
         Query getOrderByUser = requests.orderByChild("phone").equalTo(phone);
@@ -71,7 +75,7 @@ public class OrderStatus extends AppCompatActivity {
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Toast.makeText(OrderStatus.this, "your order status is: "+Common.convertCodeToStatus(model.getStatus()), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OrderStatus.this, "your order status is: " + Common.convertCodeToStatus(model.getStatus()), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

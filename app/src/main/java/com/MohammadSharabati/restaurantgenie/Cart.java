@@ -51,7 +51,9 @@ public class Cart extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         txtTotalPlace = (TextView) findViewById(R.id.total);
         btnPlace = (FButton) findViewById(R.id.btnPlaceOrder);
-
+        /**
+         * Clicking Place Order button
+         */
         btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +65,9 @@ public class Cart extends AppCompatActivity {
 
         loadListFood();
     }
-
+    /**
+     * Showing alert dialog
+     */
     private void showAlertDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("One more step!");
@@ -109,7 +113,9 @@ public class Cart extends AppCompatActivity {
         });
         alertDialog.show();
     }
-
+    /**
+     * Loading food list
+     */
     private void loadListFood() {
         cart = new Database(this).getCarts();
         adapter = new CartAdapter(cart, this);

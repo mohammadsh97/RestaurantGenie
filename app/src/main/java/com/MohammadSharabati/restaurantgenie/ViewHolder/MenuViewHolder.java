@@ -10,6 +10,10 @@ import com.MohammadSharabati.restaurantgenie.R;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Created by Mohammad Sharabati.
+ * Building item on Category Menu
+ */
 public class MenuViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public TextView txtMenuName;

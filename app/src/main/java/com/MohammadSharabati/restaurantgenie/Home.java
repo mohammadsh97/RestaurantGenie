@@ -29,6 +29,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Loading menu category list
+ */
+
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseDatabase database;
@@ -121,7 +125,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         recycler_menu.setAdapter(adapter);
 
     }
-
 
     @Override
     public void onBackPressed() {

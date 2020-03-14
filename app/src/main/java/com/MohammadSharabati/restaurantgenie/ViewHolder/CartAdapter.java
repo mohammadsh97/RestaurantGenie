@@ -1,30 +1,27 @@
 package com.MohammadSharabati.restaurantgenie.ViewHolder;
 
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.Model.Order;
 import com.MohammadSharabati.restaurantgenie.R;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+/**
+ * Created by Mohammad Sharabati.
+ * Building item on cart
+ */
 class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     public TextView txt_cart_name, txt_cart_price;
@@ -50,7 +47,9 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
 
     }
 }
-
+/**
+ * Building adapter for card recycler view
+ */
 public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
 
     private List<Order> listData = new ArrayList<>();
@@ -60,8 +59,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         this.listData = listData;
         this.context = context;
     }
-
-
 
     @NonNull
     @Override
@@ -82,7 +79,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         int price = (Integer.parseInt(listData.get(position).getPrice())) * (Integer.parseInt(listData.get(position).getQuantity()));
 
         holder.txt_cart_price.setText(fmt.format(price));
-
         holder.txt_cart_name.setText(listData.get(position).getProductName());
     }
 

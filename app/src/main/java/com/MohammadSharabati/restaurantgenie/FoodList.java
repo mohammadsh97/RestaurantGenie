@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +29,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Loading food list by categoryId
+ */
 
 public class FoodList extends AppCompatActivity {
 
@@ -75,6 +77,9 @@ public class FoodList extends AppCompatActivity {
         loadSuggest();
 
         materialSearchBar.setCardViewElevation(10);
+        /**
+         * set text change listener for Search bar
+         */
         materialSearchBar.addTextChangeListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,6 +103,10 @@ public class FoodList extends AppCompatActivity {
 
             }
         });
+
+        /**
+         * set on search action listener
+         */
         materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
             @Override
             public void onSearchStateChanged(boolean enabled) {
@@ -123,6 +132,10 @@ public class FoodList extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Loading Foods list by categoryId
+     */
 
     private void loadListFood(String categoryId) {
 
@@ -175,6 +188,10 @@ public class FoodList extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * Searching food by text
+     */
+
     private void startSearch(CharSequence text) {
         Query searchByName = foodList.orderByChild("name").equalTo(text.toString()); //Compare Name
 
@@ -213,7 +230,9 @@ public class FoodList extends AppCompatActivity {
         searchAdapter.startListening();
         recyclerView.setAdapter(searchAdapter);
     }
-
+    /**
+     * Loading suggest list from Firebase
+     */
     private void loadSuggest() {
         foodList.orderByChild("menuId").equalTo(categoryId).addValueEventListener(new ValueEventListener() {
             @Override
