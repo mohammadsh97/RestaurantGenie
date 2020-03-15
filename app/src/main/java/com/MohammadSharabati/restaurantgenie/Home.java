@@ -53,7 +53,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         //Init firebase
         database = FirebaseDatabase.getInstance();
-        category = database.getReference().child("Category");
+        category = database.getReference().child("RestaurantGenie").child(SignIn.user.getBusinessNumber()).child("Category");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

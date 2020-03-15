@@ -24,7 +24,7 @@ public class SignIn extends AppCompatActivity {
 
     private MaterialEditText edtBusinessNumber, edtName, edtPassword;
     private Button btnSignIn;
-
+    public static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class SignIn extends AppCompatActivity {
                         if (dataSnapshot.child(edtBusinessNumber.getText().toString()).exists()) {
                             // Get user information
                             mDialog.dismiss();
-                            User user = dataSnapshot.child(edtBusinessNumber.getText().toString()).child("Worker").child("Table").getValue(User.class);
+                            user = dataSnapshot.child(edtBusinessNumber.getText().toString()).child("Worker").child("Table").getValue(User.class);
                             user.setBusinessNumber(edtBusinessNumber.getText().toString());
                             if (user.getName().equals(edtName.getText().toString()) && user.getPassword().equals(edtPassword.getText().toString())) {
                                 {

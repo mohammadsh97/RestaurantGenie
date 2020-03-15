@@ -1,12 +1,10 @@
 package com.MohammadSharabati.restaurantgenie;
 
 import androidx.appcompat.app.AppCompatActivity;
-import info.hoang8f.widget.FButton;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.MohammadSharabati.restaurantgenie.Database.Database;
@@ -15,7 +13,6 @@ import com.MohammadSharabati.restaurantgenie.Model.Order;
 import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,7 +40,7 @@ public class FoodDetail extends AppCompatActivity {
 
         //Init Firebase
         database = FirebaseDatabase.getInstance();
-        foods = database.getReference("Foods");
+        foods = database.getReference().child("RestaurantGenie").child(SignIn.user.getBusinessNumber()).child("Foods");
 
         //Init View
         numberButton = (ElegantNumberButton) findViewById(R.id.number_button);

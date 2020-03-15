@@ -54,7 +54,7 @@ public class FoodList extends AppCompatActivity {
 
         //firebase
         database = FirebaseDatabase.getInstance();
-        foodList = database.getReference("Foods");
+        foodList = database.getReference().child("RestaurantGenie").child(SignIn.user.getBusinessNumber()).child("Foods");
         recyclerView = findViewById(R.id.recycler_food);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
