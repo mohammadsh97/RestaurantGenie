@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,14 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        // if we start orderStatus activity from Home Activity we will not put any exra ,
+        // so we just load order phone from Common
+        Log.v("TAG" , "getIntent = "+getIntent());
+//        if (getIntent()==null){
+//            loadOrders(Common.currentUser.getPhone());
+//        }else {
+//            loadOrders(getIntent().getStringExtra("userPhone"));
+//        }
         loadOrders(Common.currentUser.getPhone());
     }
 

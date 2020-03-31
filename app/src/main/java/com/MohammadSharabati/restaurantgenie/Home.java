@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.Model.Category;
+import com.MohammadSharabati.restaurantgenie.Service.ListenOrder;
 import com.MohammadSharabati.restaurantgenie.ViewHolder.MenuViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -84,6 +85,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
         loadMenu();
+
+        // register service
+        Intent service=new Intent(Home.this, ListenOrder.class);
+        startService(service);
 
     }
 

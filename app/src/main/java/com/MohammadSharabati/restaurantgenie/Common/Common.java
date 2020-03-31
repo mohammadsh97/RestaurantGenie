@@ -13,9 +13,9 @@ public class Common {
             case "0":
                 return "Placed";
             case "1":
-                return "On my way";
+                return "Processing";
             default:
-                return "Shipped";
+                return "Ready, On the way to you";
         }
     }
 }
