@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.Model.Food;
 import com.MohammadSharabati.restaurantgenie.ViewHolder.FoodViewHolder;
@@ -65,7 +68,14 @@ public class FoodList extends AppCompatActivity {
             categoryId = getIntent().getStringExtra("CategoryId");
 
         if (!categoryId.isEmpty() && categoryId != null) {
-            loadListFood(categoryId);
+
+            if (Common.isConnectedToInternet(this))
+                loadListFood(categoryId);
+            else {
+                Toast.makeText(FoodList.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
         }
 
         //Search function need Category

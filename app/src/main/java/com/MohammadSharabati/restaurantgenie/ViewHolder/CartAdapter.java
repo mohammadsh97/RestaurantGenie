@@ -2,11 +2,14 @@ package com.MohammadSharabati.restaurantgenie.ViewHolder;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.Model.Order;
 import com.MohammadSharabati.restaurantgenie.R;
@@ -22,7 +25,9 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by Mohammad Sharabati.
  * Building item on cart
  */
-class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+class CartViewHolder extends RecyclerView.ViewHolder implements
+        View.OnClickListener,
+        View.OnCreateContextMenuListener {
 
     public TextView txt_cart_name, txt_cart_price;
     public ElegantNumberButton btn_quantity;
@@ -40,11 +45,22 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
         txt_cart_price = (TextView) itemView.findViewById(R.id.cart_item_Price);
         btn_quantity = (ElegantNumberButton) itemView.findViewById(R.id.btn_quantity);
         img_cart_count = (ImageView) itemView.findViewById(R.id.cart_image);
+
+        itemView.setOnCreateContextMenuListener(this);
+
+
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        menu.setHeaderTitle("Select the action");
+        menu.add(0, 0, getAdapterPosition(), Common.DELETE);
     }
 }
 /**

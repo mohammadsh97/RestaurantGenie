@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Model.Food;
 import com.MohammadSharabati.restaurantgenie.Model.Order;
@@ -78,7 +80,14 @@ public class FoodDetail extends AppCompatActivity {
         if (getIntent() != null)
             foodId = getIntent().getStringExtra("FoodId");
         if (!foodId.isEmpty() && foodId != null) {
-            getDetailFood(foodId);
+
+            if (Common.isConnectedToInternet(this))
+                getDetailFood(foodId);
+            else {
+                Toast.makeText(FoodDetail.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
 
         }
     }

@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.Model.Category;
@@ -84,7 +86,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         recycler_menu.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
-        loadMenu();
+
+
+        if (Common.isConnectedToInternet(this))
+            loadMenu();
+        else {
+            Toast.makeText(this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // register service
         Intent service=new Intent(Home.this, ListenOrder.class);
