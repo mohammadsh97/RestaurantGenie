@@ -1,7 +1,10 @@
 package com.MohammadSharabati.restaurantgenie;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import io.paperdb.Paper;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rey.material.widget.CheckBox;
 
 /**
  * Checking when user sign in app
@@ -24,17 +28,24 @@ public class SignIn extends AppCompatActivity {
 
     private MaterialEditText edtBusinessNumber, edtName, edtPassword;
     private Button btnSignIn;
-    public static User user;
+    CheckBox ckbRemember;
+//    TextView txtForgotPwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        Paper.init(this);
+
         edtBusinessNumber = (MaterialEditText) findViewById(R.id.edtBusinessNumber);
         edtName = (MaterialEditText) findViewById(R.id.edtName);
         edtPassword = (MaterialEditText) findViewById(R.id.edtPassword);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
+        ckbRemember =(CheckBox)findViewById(R.id.ckbRemember);
+//        txtForgotPwd =(TextView) findViewById(R.id.txtForgotPwd);
+
+
 
         //Int Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -57,17 +68,27 @@ public class SignIn extends AppCompatActivity {
                                 if (dataSnapshot.child(edtBusinessNumber.getText().toString()).exists()) {
                                     // Get user information
                                     mDialog.dismiss();
-                                    user = dataSnapshot.child(edtBusinessNumber.getText().toString()).child("Worker").child("Table").getValue(User.class);
+                                    User user = dataSnapshot.child(edtBusinessNumber.getText().toString()).child("Worker").child("Table").getValue(User.class);
                                     user.setBusinessNumber(edtBusinessNumber.getText().toString());
                                     if (user.getName().equals(edtName.getText().toString()) && user.getPassword().equals(edtPassword.getText().toString())) {
                                         {
+                                            // Save user & Password
+                                            if (ckbRemember.isChecked()) {
+
+                                                Paper.book().write(Common.USER_BN, edtBusinessNumber.getText().toString());
+                                                Paper.book().write(Common.USER_KEY, edtName.getText().toString());
+                                                Paper.book().write(Common.PWD_KEY, edtPassword.getText().toString());
+                                            }
+
                                             Intent homeIntent = new Intent(SignIn.this, Home.class);
                                             Common.currentUser = user;
                                             startActivity(homeIntent);
                                             finish();
                                         }
-                                    } else
+                                    } else {
+                                        mDialog.dismiss();
                                         Toast.makeText(SignIn.this, "Wrong Password !!!", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
                                     mDialog.dismiss();
                                     Toast.makeText(SignIn.this, "User not exist in Database", Toast.LENGTH_SHORT).show();

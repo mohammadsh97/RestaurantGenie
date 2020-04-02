@@ -42,7 +42,7 @@ public class FoodDetail extends AppCompatActivity {
 
         //Init Firebase
         database = FirebaseDatabase.getInstance();
-        foods = database.getReference().child("RestaurantGenie").child(SignIn.user.getBusinessNumber()).child("Foods");
+        foods = database.getReference().child("RestaurantGenie").child(Common.currentUser.getBusinessNumber()).child("Foods");
 
         //Init View
         numberButton = (ElegantNumberButton) findViewById(R.id.number_button);

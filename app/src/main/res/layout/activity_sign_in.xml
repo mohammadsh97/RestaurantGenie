@@ -62,6 +62,33 @@
             app:met_maxCharacters="11"
             app:met_primaryColor="@android:color/white"
             app:met_singleLineEllipsis="true" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.rey.material.widget.CheckBox
+                android:id="@+id/ckbRemember"
+                style="@style/Material.Drawable.CheckBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Remember me"
+                android:textColor="@android:color/white" />
+
+            <com.rey.material.widget.TextView
+                android:id="@+id/txtForgotPwd"
+                android:textColor="@android:color/white"
+                android:text="@string/forgot_pwd"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <info.hoang8f.widget.FButton

@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".FoodList">
 
-
     <com.mancj.materialsearchbar.MaterialSearchBar
         android:id="@+id/searchBar"
         android:layout_width="match_parent"

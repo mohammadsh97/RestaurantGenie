@@ -1,36 +1,41 @@
 package com.MohammadSharabati.restaurantgenie;
 
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.MohammadSharabati.restaurantgenie.Common.Common;
-import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
-import com.MohammadSharabati.restaurantgenie.Model.Category;
-import com.MohammadSharabati.restaurantgenie.Service.ListenOrder;
-import com.MohammadSharabati.restaurantgenie.ViewHolder.MenuViewHolder;
+import com.MohammadSharabati.restaurantgenie.Model.Token;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.view.GravityCompat;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.MohammadSharabati.restaurantgenie.Common.Common;
+import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
+import com.MohammadSharabati.restaurantgenie.Model.Category;
+import com.MohammadSharabati.restaurantgenie.ViewHolder.MenuViewHolder;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.paperdb.Paper;
+
+import android.view.Menu;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Loading menu category list
@@ -50,13 +55,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Paper.init(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
 
         //Init firebase
         database = FirebaseDatabase.getInstance();
-        category = database.getReference().child("RestaurantGenie").child(SignIn.user.getBusinessNumber()).child("Category");
+        category = database.getReference().child("RestaurantGenie").child(Common.currentUser.getBusinessNumber()).child("Category");
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -95,10 +105,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             return;
         }
 
-        // register service
-        Intent service=new Intent(Home.this, ListenOrder.class);
-        startService(service);
+        updateToken(FirebaseInstanceId.getInstance().getToken());
 
+
+    }
+
+    private void updateToken(String token) {
+
+        FirebaseDatabase db =FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token(token, false);
+        tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
 
     private void loadMenu() {
@@ -181,6 +198,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(orderIntent);
 
         } else if (id == R.id.nav_log_out) {
+
+            //Delete Remember user
+            Paper.book().destroy();
+
             //Logout
             Intent signIn = new Intent(Home.this, MainActivity.class);
             signIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

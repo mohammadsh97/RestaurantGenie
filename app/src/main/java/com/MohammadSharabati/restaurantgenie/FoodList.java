@@ -1,5 +1,6 @@
 package com.MohammadSharabati.restaurantgenie;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +33,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Loading food list by categoryId
  */
@@ -57,7 +59,7 @@ public class FoodList extends AppCompatActivity {
 
         //firebase
         database = FirebaseDatabase.getInstance();
-        foodList = database.getReference().child("RestaurantGenie").child(SignIn.user.getBusinessNumber()).child("Foods");
+        foodList = database.getReference().child("RestaurantGenie").child(Common.currentUser.getBusinessNumber()).child("Foods");
         recyclerView = findViewById(R.id.recycler_food);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -173,11 +175,6 @@ public class FoodList extends AppCompatActivity {
                         foodDetail.putExtra("FoodId", adapter.getRef(position).getKey()); // Send Food Id to new Activity
                         startActivity(foodDetail);
                     }
-//                        Intent foodDetailIntent = new Intent(FoodList.this, FoodDetail.class);
-//                        foodDetailIntent.putExtra("FoodId", searchAdapter.getRef(position).getKey()); // Send Food Id to new Activity
-//                        startActivity(foodDetailIntent);
-//
-//                    }
                 });
             }
 
@@ -193,7 +190,6 @@ public class FoodList extends AppCompatActivity {
 
         };
         //Set Adapter
-        Log.d("TAG" , ""+adapter.getItemCount());
         adapter.startListening();
         recyclerView.setAdapter(adapter);
     }

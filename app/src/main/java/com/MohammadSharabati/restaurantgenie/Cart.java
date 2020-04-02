@@ -5,6 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import info.hoang8f.widget.FButton;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +20,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Database.Database;
+import com.MohammadSharabati.restaurantgenie.Model.MyResponse;
+import com.MohammadSharabati.restaurantgenie.Model.Notification;
 import com.MohammadSharabati.restaurantgenie.Model.Order;
 import com.MohammadSharabati.restaurantgenie.Model.Request;
+import com.MohammadSharabati.restaurantgenie.Model.Sender;
+import com.MohammadSharabati.restaurantgenie.Model.Token;
+import com.MohammadSharabati.restaurantgenie.Remote.APIService;
 import com.MohammadSharabati.restaurantgenie.ViewHolder.CartAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +50,14 @@ public class Cart extends AppCompatActivity {
     private FButton btnPlace;
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
+    APIService mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        mService = Common.getFCMService();
 
         //Init Firebase
         database = FirebaseDatabase.getInstance();
@@ -75,7 +92,7 @@ public class Cart extends AppCompatActivity {
     private void showAlertDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("One more step!");
-        alertDialog.setMessage("Enter your address:");
+        alertDialog.setMessage("Enter your notes:");
 
         final EditText edtAddress = new EditText(Cart.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -100,10 +117,15 @@ public class Cart extends AppCompatActivity {
 
                 // Submit to Firebase
                 // We Will using System.CurrentMilli to key
-                requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
 
+                String order_number = String.valueOf(System.currentTimeMillis());
+
+                requests.child(order_number).setValue(request);
                 //Delete Cart
                 new Database(getBaseContext()).cleanCart();
+
+                sendNotificationOrder(order_number);
+
                 Toast.makeText(Cart.this, "Thank you, order place", Toast.LENGTH_SHORT).show();
                 finish();
 
@@ -117,6 +139,50 @@ public class Cart extends AppCompatActivity {
         });
         alertDialog.show();
     }
+
+    private void sendNotificationOrder(final String order_number) {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query data = tokens.orderByChild("isServerToken").equalTo(true);
+        data.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                    Token serverToken = postSnapshot.getValue(Token.class);
+
+                    Notification notification = new Notification("Restaurant Genie", "You have new Order" + order_number);
+                    Sender content = new Sender(serverToken.getToken(), notification);
+
+                    mService.sendNotification(content)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.code() == 200) {
+                                        if (response.body().success == 1) {
+                                            Toast.makeText(Cart.this, "Thank you, Order placed", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        } else {
+                                            Toast.makeText(Cart.this, "Failed !!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+                                    Log.e("error", t.getMessage());
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     /**
      * Loading food list
      */
