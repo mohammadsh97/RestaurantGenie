@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.util.Log;
 
 import com.MohammadSharabati.restaurantgenie.MainActivity;
 import com.MohammadSharabati.restaurantgenie.R;
@@ -15,11 +16,13 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import androidx.core.app.NotificationCompat;
 
+
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        Log.d("TAG_MyFirebaseMessaging", "From: " + remoteMessage.getFrom());
             sendNotification(remoteMessage);
     }
 

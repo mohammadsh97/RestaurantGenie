@@ -42,9 +42,8 @@ public class SignIn extends AppCompatActivity {
         edtName = (MaterialEditText) findViewById(R.id.edtName);
         edtPassword = (MaterialEditText) findViewById(R.id.edtPassword);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
-        ckbRemember =(CheckBox)findViewById(R.id.ckbRemember);
+        ckbRemember = (CheckBox) findViewById(R.id.ckbRemember);
 //        txtForgotPwd =(TextView) findViewById(R.id.txtForgotPwd);
-
 
 
         //Int Firebase
@@ -60,18 +59,22 @@ public class SignIn extends AppCompatActivity {
                     final ProgressDialog mDialog = new ProgressDialog(SignIn.this);
                     mDialog.setMessage("Please waiting...");
                     mDialog.show();
+
                     if (edtBusinessNumber.getText().toString().trim().length() != 0) {
                         table_user.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                //Chech if user not exist in databases
                                 if (dataSnapshot.child(edtBusinessNumber.getText().toString()).exists()) {
-                                    // Get user information
+
                                     mDialog.dismiss();
-                                    User user = dataSnapshot.child(edtBusinessNumber.getText().toString()).child("Worker").child("Table").getValue(User.class);
-                                    user.setBusinessNumber(edtBusinessNumber.getText().toString());
-                                    if (user.getName().equals(edtName.getText().toString()) && user.getPassword().equals(edtPassword.getText().toString())) {
-                                        {
+
+                                    for (DataSnapshot snapshot : dataSnapshot.child(edtBusinessNumber.getText().toString()).child("Worker").child("Table").getChildren()) {
+
+                                        User model = snapshot.getValue(User.class);
+
+                                        // check Name and password for staff
+                                        if (model.getName().equals(edtName.getText().toString()) && model.getPassword().equals(edtPassword.getText().toString())) {
+                                            // Login ok
                                             // Save user & Password
                                             if (ckbRemember.isChecked()) {
 
@@ -79,14 +82,13 @@ public class SignIn extends AppCompatActivity {
                                                 Paper.book().write(Common.USER_KEY, edtName.getText().toString());
                                                 Paper.book().write(Common.PWD_KEY, edtPassword.getText().toString());
                                             }
-
                                             Intent homeIntent = new Intent(SignIn.this, Home.class);
-                                            Common.currentUser = user;
+                                            Common.currentUser = model;
                                             startActivity(homeIntent);
                                             finish();
                                         }
-                                    } else {
-                                        mDialog.dismiss();
+                                    }
+                                    if (Common.currentUser == null) {
                                         Toast.makeText(SignIn.this, "Wrong Password !!!", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {

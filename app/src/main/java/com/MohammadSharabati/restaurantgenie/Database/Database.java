@@ -58,4 +58,53 @@ public class Database extends SQLiteAssetHelper {
         db.execSQL(query);
     }
 
+    public void addToFavorites (String foodId)
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("INSERT INTO Favorites VALUES('%s');",foodId);
+        db.execSQL(query);
+    }
+
+    public void removeFromFavorites (String foodId)
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("DELETE FROM Favorites WHERE FoodId ='%s';",foodId);
+        db.execSQL(query);
+    }
+
+    public boolean isFavorite (String foodId)
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("SELECT * FROM FAVORITES WHERE FoodId ='%s';",foodId);
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.getCount() <= 0)
+        {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
+    public int getCountCart() {
+        int count = 0;
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("SELECT COUNT(*) FROM OrderDetail");
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst())
+        {
+            do{
+                count = cursor.getInt(0);
+            }while (cursor.moveToNext());
+        }
+        return count;
+    }
+
+
+    public void updateCart(Order order) {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("UPDATE OrderDetail SET Quantity = %s WHERE ID = %d", order.getQuantity(), order.getID());
+        db.execSQL(query);
+    }
+
 }

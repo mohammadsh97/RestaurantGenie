@@ -82,11 +82,11 @@
             android:id="@+id/btn_quantity"
             android:layout_width="60dp"
             android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            app:textSize="8sp"
             app:backGroundColor="@color/colorAccent"
             app:finalNumber="20"
-            app:initialNumber="1"
-            app:textSize="4sp"/>
+            app:initialNumber="1" />
 
     </LinearLayout>
 

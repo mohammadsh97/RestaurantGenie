@@ -18,6 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
+    private FirebaseDatabase database;
+    private DatabaseReference table_user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,19 +34,19 @@ public class MainActivity extends AppCompatActivity {
         String pwd = Paper.book().read(Common.PWD_KEY);
         if (bN != null && user != null && pwd != null) {
             if (!bN.isEmpty() && !user.isEmpty() && !pwd.isEmpty()) {
+
+                database = FirebaseDatabase.getInstance();
+                table_user = database.getReference("RestaurantGenie");
+
                 login(bN, user, pwd);
             }
-        }
-        else{
-            Intent signIn = new Intent(MainActivity.this,SignIn.class);
+        } else {
+            Intent signIn = new Intent(MainActivity.this, SignIn.class);
             startActivity(signIn);
         }
     }
 
     private void login(final String BusinessNumber, final String Name, final String password) {
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("RestaurantGenie");
 
         if (Common.isConnectedToInternet(getBaseContext())) {
 
@@ -54,21 +57,27 @@ public class MainActivity extends AppCompatActivity {
                 table_user.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //Chech if user not exist in databases
                         if (dataSnapshot.child(BusinessNumber).exists()) {
-                            // Get user information
+
                             mDialog.dismiss();
-                            User user = dataSnapshot.child(BusinessNumber).child("Worker").child("Table").getValue(User.class);
-                            user.setBusinessNumber(BusinessNumber);
-                            if (user.getName().equals(Name) && user.getPassword().equals(password)) {
-                                {
+                            for (DataSnapshot snapshot : dataSnapshot.child(BusinessNumber).child("Worker").child("Table").getChildren()) {
+
+                                User model = snapshot.getValue(User.class);
+
+                                // check Name and password for staff
+                                if (model.getName().equals(Name) && model.getPassword().equals(password)) {
+                                    // Login ok
+                                    // Save user & Password
+
                                     Intent homeIntent = new Intent(MainActivity.this, Home.class);
-                                    Common.currentUser = user;
+                                    Common.currentUser = model;
                                     startActivity(homeIntent);
                                     finish();
                                 }
-                            } else
+                            }
+                            if (Common.currentUser == null) {
                                 Toast.makeText(MainActivity.this, "Wrong Password !!!", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             mDialog.dismiss();
                             Toast.makeText(MainActivity.this, "User not exist in Database", Toast.LENGTH_SHORT).show();

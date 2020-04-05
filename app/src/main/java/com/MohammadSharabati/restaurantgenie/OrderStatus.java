@@ -43,15 +43,22 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // if we start orderStatus activity from Home Activity we will not put any exra ,
-        // so we just load order phone from Common
-        Log.v("TAG" , "getIntent = "+getIntent());
-//        if (getIntent()==null){
-//            loadOrders(Common.currentUser.getPhone());
-//        }else {
-//            loadOrders(getIntent().getStringExtra("userPhone"));
-//        }
         loadOrders(Common.currentUser.getPhone());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Fix click back on FoodDetail and get no item in FoodList
+        if (adapter != null)
+            adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adapter != null)
+            adapter.stopListening();
     }
 
     /**
@@ -78,7 +85,7 @@ public class OrderStatus extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull OrderViewHolder viewHolder, int position, @NonNull final Request model) {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
                 viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
-                viewHolder.txtOrderAddress.setText(model.getAddress());
+                viewHolder.txtOrderNote.setText(model.getNote());
                 viewHolder.txtOrderPhone.setText(model.getPhone());
 
                 viewHolder.setItemClickListener(new ItemClickListener() {
@@ -90,6 +97,7 @@ public class OrderStatus extends AppCompatActivity {
             }
         };
         adapter.startListening();
+        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
 }

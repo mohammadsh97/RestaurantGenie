@@ -1,6 +1,7 @@
 package com.MohammadSharabati.restaurantgenie;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -31,6 +32,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.paperdb.Paper;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import android.view.Menu;
 import android.view.ViewGroup;
@@ -50,6 +52,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerOptions<Category> options;
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
+    FloatingActionButton fab;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +76,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,7 +137,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 Picasso.with(getBaseContext())
                         .load(model.getImage())
                         .into(holder.imageView);
-                final Category clickItem = model;
                 holder.txtMenuName.setText(model.getName());
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
@@ -143,6 +150,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     }
                 });
             }
+
             @NonNull
             @Override
             public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -154,8 +162,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         adapter.startListening();
         recycler_menu.setAdapter(adapter);
-
+        recycler_menu.getAdapter().notifyDataSetChanged();
+        recycler_menu.scheduleLayoutAnimation();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Fix click back on FoodDetail and get no item in FoodList
+        if (adapter != null)
+            adapter.startListening();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -188,6 +206,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         int id = item.getItemId();
 
         if (id == R.id.nav_menu) {
+            adapter.startListening();
+            recycler_menu.setAdapter(adapter);
+            recycler_menu.getAdapter().notifyDataSetChanged();
+            recycler_menu.scheduleLayoutAnimation();
 
         } else if (id == R.id.nav_cart) {
             Intent cartIntent = new Intent(Home.this, Cart.class);
@@ -212,4 +234,5 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

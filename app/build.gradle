@@ -41,10 +41,18 @@ dependencies {
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.daimajia.slider:library:1.1.5@aar'
 
-    //Firebase
+//    //Firebase
+//    implementation 'com.google.firebase:firebase-messaging:11.6.2'
+//    implementation 'com.google.firebase:firebase-core:11.6.2'
+//    implementation 'com.google.firebase:firebase-database:11.6.2'
+//    implementation 'com.firebaseui:firebase-ui-database:3.1.2'
+
+    //Firebase dont change vertion please
     implementation 'com.google.firebase:firebase-messaging:11.6.2'
+    implementation 'com.google.firebase:firebase-auth:11.6.2'
     implementation 'com.google.firebase:firebase-core:11.6.2'
     implementation 'com.google.firebase:firebase-database:11.6.2'
+    implementation 'com.google.firebase:firebase-storage:11.6.2'
     implementation 'com.firebaseui:firebase-ui-database:3.1.2'
 
     //Google Service

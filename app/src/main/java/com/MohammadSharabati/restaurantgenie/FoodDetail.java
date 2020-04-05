@@ -2,7 +2,6 @@ package com.MohammadSharabati.restaurantgenie;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +11,7 @@ import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Model.Food;
 import com.MohammadSharabati.restaurantgenie.Model.Order;
+import com.MohammadSharabati.restaurantgenie.Model.Rating;
 import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -51,11 +52,6 @@ public class FoodDetail extends AppCompatActivity {
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("foodId is", foodId);
-                Log.v("getName is", currentFood.getName());
-                Log.v("getNumber is", numberButton.getNumber());
-                Log.v("getPrice is", currentFood.getPrice());
-                Log.v("getDiscount is", currentFood.getDiscount());
                 new Database(getBaseContext()).addToCart(new Order(
                         foodId,
                         currentFood.getName(),
@@ -119,4 +115,29 @@ public class FoodDetail extends AppCompatActivity {
             }
         });
     }
+
+//    private void getRatingFood(String foodId) {
+//        Query foodRating = ratingTbl.orderByChild("foodId").equalTo(foodId);
+//        foodRating.addValueEventListener(new ValueEventListener() {
+//            int count = 0, sum = 0;
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+//                    Rating item = postSnapshot.getValue(Rating.class);
+//                    sum += Integer.parseInt(item.getRateValue());
+//                    count++;
+//                }
+//                if (count != 0){
+//                    float average = sum/count;
+//                    ratingBar.setRating(average);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 }

@@ -94,13 +94,13 @@ public class Cart extends AppCompatActivity {
         alertDialog.setTitle("One more step!");
         alertDialog.setMessage("Enter your notes:");
 
-        final EditText edtAddress = new EditText(Cart.this);
+        final EditText edtNote = new EditText(Cart.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
         );
-        edtAddress.setLayoutParams(lp);
-        alertDialog.setView(edtAddress); // Add edit Text to alert dialog
+        edtNote.setLayoutParams(lp);
+        alertDialog.setView(edtNote); // Add edit Text to alert dialog
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -110,7 +110,7 @@ public class Cart extends AppCompatActivity {
                 Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
-                        edtAddress.getText().toString(),
+                        edtNote.getText().toString(),
                         txtTotalPlace.getText().toString(),
                         cart
                 );
