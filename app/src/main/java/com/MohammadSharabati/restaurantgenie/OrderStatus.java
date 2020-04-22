@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+/**
+ * Created by Mohammad Sharabati.
+ */
+
+
 public class OrderStatus extends AppCompatActivity {
 
     private FirebaseDatabase database;
@@ -35,7 +42,8 @@ public class OrderStatus extends AppCompatActivity {
 
         //Init Firebase
         database = FirebaseDatabase.getInstance();
-        requests = database.getReference("Requests");
+        requests = database.getReference().child("RestaurantGenie").child(Common.currentUser.getBusinessNumber()).child("Requests");
+
 
         //Init
         recyclerView = (RecyclerView) findViewById(R.id.recyclerOrders);
@@ -84,9 +92,21 @@ public class OrderStatus extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull OrderViewHolder viewHolder, int position, @NonNull final Request model) {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
+                viewHolder.txtOrderDate.setText(Common.getDate(Long.parseLong(adapter.getRef(position).getKey())));
                 viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
                 viewHolder.txtOrderNote.setText(model.getNote());
                 viewHolder.txtOrderPhone.setText(model.getPhone());
+
+
+                viewHolder.btnDetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent orderDetailIntent = new Intent(OrderStatus.this, OrderDetail.class);
+                        Common.currentRequest = model;
+                        orderDetailIntent.putExtra("OrderId", adapter.getRef(position).getKey());
+                        startActivity(orderDetailIntent);
+                    }
+                });
 
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override

@@ -1,13 +1,16 @@
 package com.MohammadSharabati.restaurantgenie.Remote;
 
 
+import com.MohammadSharabati.restaurantgenie.Model.DataMessage;
 import com.MohammadSharabati.restaurantgenie.Model.MyResponse;
-import com.MohammadSharabati.restaurantgenie.Model.Sender;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
-
+/**
+ * Created by Mohammad Sharabati.
+ */
 public interface APIService {
     @Headers(
             {
@@ -18,5 +21,5 @@ public interface APIService {
     )
 
     @POST("fcm/send")
-    retrofit2.Call<MyResponse> sendNotification(@Body Sender body);
+    Call<MyResponse> sendNotification(@Body DataMessage body);
 }

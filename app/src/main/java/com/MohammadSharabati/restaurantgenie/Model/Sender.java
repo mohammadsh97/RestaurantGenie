@@ -1,6 +1,8 @@
 package com.MohammadSharabati.restaurantgenie.Model;
 
-
+/**
+ * Created by Mohammad Sharabati.
+ */
 public class Sender {
     private String to;
     private Notification notification;

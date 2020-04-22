@@ -1,5 +1,7 @@
 package com.MohammadSharabati.restaurantgenie.Model;
-
+/**
+ * Created by Mohammad Sharabati.
+ */
 public class User {
 
     private String businessNumber;
@@ -7,6 +9,7 @@ public class User {
     private String Phone ;
     private String Name ;
     private String Password ;
+    private Object balance;
 
 
     public User() {
@@ -18,6 +21,13 @@ public class User {
         this.Phone = phone;
         this.Name = name;
         this.Password = password;
+    }
+
+    public Object getBalance() {
+        return balance;
+    }
+    public void setBalance(Object balance) {
+        this.balance = balance;
     }
 
     public String getBusinessNumber() {

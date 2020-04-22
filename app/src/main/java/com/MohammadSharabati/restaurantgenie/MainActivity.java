@@ -2,21 +2,46 @@ package com.MohammadSharabati.restaurantgenie;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.paperdb.Paper;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.MohammadSharabati.restaurantgenie.Common.Common;
+import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
+import com.MohammadSharabati.restaurantgenie.Model.Category;
 import com.MohammadSharabati.restaurantgenie.Model.User;
+import com.MohammadSharabati.restaurantgenie.ViewHolder.MenuViewHolder;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+/**
+ * Created by Mohammad Sharabati.
+ */
 
 public class MainActivity extends AppCompatActivity {
+
+
+    private FirebaseRecyclerOptions<Category> options;
+    private FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
+    private FirebaseDatabase database2;
+    private DatabaseReference category;
+    private RecyclerView recycler_menu;
+    private RecyclerView.LayoutManager layoutManager;
+
 
     private FirebaseDatabase database;
     private DatabaseReference table_user;
@@ -99,5 +124,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
             return;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v("TAG" , "MainActivity => onResume");
     }
 }

@@ -1,7 +1,9 @@
 package com.MohammadSharabati.restaurantgenie.Model;
 
 import java.util.List;
-
+/**
+ * Created by Mohammad Sharabati.
+ */
 public class Request {
     private String phone;
     private String name;

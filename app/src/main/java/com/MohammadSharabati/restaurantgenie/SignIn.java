@@ -22,6 +22,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rey.material.widget.CheckBox;
 
 /**
+ * Created by Mohammad Sharabati.
  * Checking when user sign in app
  */
 public class SignIn extends AppCompatActivity {
@@ -49,6 +50,7 @@ public class SignIn extends AppCompatActivity {
         //Int Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference table_user = database.getReference("RestaurantGenie");
+
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override

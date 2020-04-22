@@ -1,5 +1,7 @@
 package com.MohammadSharabati.restaurantgenie.Model;
-
+/**
+ * Created by Mohammad Sharabati.
+ */
 public class Rating {
     private String userPhone;
     private String foodId;

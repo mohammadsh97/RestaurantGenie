@@ -1,5 +1,7 @@
 package com.MohammadSharabati.restaurantgenie.Model;
-
+/**
+ * Created by Mohammad Sharabati.
+ */
 public class Food {
     private String Name, Image, Description, Price, Discount, MenuId;
 

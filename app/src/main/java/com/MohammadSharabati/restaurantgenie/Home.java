@@ -4,12 +4,11 @@ package com.MohammadSharabati.restaurantgenie;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
+import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Model.Token;
+import com.andremion.counterfab.CounterFab;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -33,26 +32,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 /**
+ * Created by Mohammad Sharabati.
  * Loading menu category list
  */
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    FirebaseDatabase database;
-    DatabaseReference category;
-    TextView txtFullName;
-    RecyclerView recycler_menu;
-    RecyclerView.LayoutManager layoutManager;
-    FirebaseRecyclerOptions<Category> options;
-    FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
-    FloatingActionButton fab;
+    private FirebaseDatabase database;
+    private DatabaseReference category;
+    private TextView txtFullName;
+    private RecyclerView recycler_menu;
+    private RecyclerView.LayoutManager layoutManager;
+    private FirebaseRecyclerOptions<Category> options;
+    private FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter = null;
+    private CounterFab fab;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -75,8 +74,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         category = database.getReference().child("RestaurantGenie").child(Common.currentUser.getBusinessNumber()).child("Category");
 
 
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,6 +82,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 startActivity(cartIntent);
             }
         });
+
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -105,23 +105,21 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-
-        if (Common.isConnectedToInternet(this))
+        if (Common.isConnectedToInternet(this)) {
             loadMenu();
-        else {
+            updateToken(FirebaseInstanceId.getInstance().getToken());
+        } else {
             Toast.makeText(this, "Please check your network connection", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        updateToken(FirebaseInstanceId.getInstance().getToken());
 
 
     }
 
     private void updateToken(String token) {
 
-        FirebaseDatabase db =FirebaseDatabase.getInstance();
-        DatabaseReference tokens = db.getReference("Tokens");
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference().child("RestaurantGenie").child(Common.currentUser.getBusinessNumber()).child("Tokens");
         Token data = new Token(token, false);
         tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
@@ -161,22 +159,43 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         };
 
         adapter.startListening();
+        adapter.notifyDataSetChanged(); // Refresh data if have data changed
         recycler_menu.setAdapter(adapter);
-        recycler_menu.getAdapter().notifyDataSetChanged();
-        recycler_menu.scheduleLayoutAnimation();
+    }
+
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.v("TAG" , "Home => onStop");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v("TAG" , "Home => onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //Fix click back on FoodDetail and get no item in FoodList
-        if (adapter != null)
-            adapter.startListening();
+        Log.v("TAG" , "Home => onResume");
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
+        adapter.startListening();
+        adapter.notifyDataSetChanged(); // Refresh data if have data changed
+        recycler_menu.setAdapter(adapter);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v("TAG" , "Home => onDestroy");
+    }
 
     @Override
     public void onBackPressed() {
+        Log.v("TAG" , "Home => onBackPressed");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -209,10 +228,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             adapter.startListening();
             recycler_menu.setAdapter(adapter);
             recycler_menu.getAdapter().notifyDataSetChanged();
-            recycler_menu.scheduleLayoutAnimation();
+//            recycler_menu.scheduleLayoutAnimation();
 
         } else if (id == R.id.nav_cart) {
             Intent cartIntent = new Intent(Home.this, Cart.class);
+            cartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(cartIntent);
 
         } else if (id == R.id.nav_orders) {
@@ -228,11 +248,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             Intent signIn = new Intent(Home.this, MainActivity.class);
             signIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(signIn);
+        } else if (id == R.id.nav_favorites) {
+            startActivity(new Intent(Home.this, FavoritesActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }

@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical|start"
-                android:text="100,000"
+                android:text="100"
                 android:textAllCaps="true"
                 android:textStyle="italic"/>
 

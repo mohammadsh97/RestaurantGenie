@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
  * Building item on Food List
  */
 public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public TextView food_name, food_price;
-    public ImageView food_image, fav_image, share_image, quickCart;
+    public TextView food_name, food_price_item;
+    public ImageView food_image, fav_image, quickCart;
 
     private ItemClickListener itemClickListener;
 
@@ -24,6 +24,9 @@ public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
         food_name = (TextView) itemView.findViewById(R.id.food_name);
         food_image = (ImageView) itemView.findViewById(R.id.food_image);
+        fav_image = (ImageView) itemView.findViewById(R.id.fav);
+        food_price_item = (TextView) itemView.findViewById(R.id.food_price_item);
+        quickCart = (ImageView) itemView.findViewById(R.id.btn_quick_cart);
         itemView.setOnClickListener(this);
 
     }
