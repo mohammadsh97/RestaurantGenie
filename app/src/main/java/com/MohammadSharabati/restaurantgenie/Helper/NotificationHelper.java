@@ -17,14 +17,14 @@ import com.MohammadSharabati.restaurantgenie.R;
 
 public class NotificationHelper extends ContextWrapper {
 
-    private static final String MOHAMMAD_CHANNEL_ID = "com.mohammadsharabati.restaurantgenieserver.Mohammad";
-    private static final String MOHAMMAD_CHANNEL_NAME = "RestaurantGenie";
+    private static final String MOHAMMAD_CHANNEL_ID = "com.MohammadSharabati.restaurantgenie.Mohammad";
+    private static final String MOHAMMAD_CHANNEL_NAME = "Restaurant Genie";
 
     private NotificationManager manager;
 
     public NotificationHelper(Context base) {
         super(base);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) // Api
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) // Api 26+
             createChanel();
     }
 
@@ -43,7 +43,6 @@ public class NotificationHelper extends ContextWrapper {
     public NotificationManager getManager() {
         if (manager == null)
             manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         return manager;
     }
 
