@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import info.hoang8f.widget.FButton;
+import io.paperdb.Paper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,16 +32,20 @@ import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Helper.RecyclerItemTouchHelper;
 import com.MohammadSharabati.restaurantgenie.Interface.RecyclerItemTouchHelperListener;
 import com.MohammadSharabati.restaurantgenie.Model.DataMessage;
+import com.MohammadSharabati.restaurantgenie.Model.Food;
 import com.MohammadSharabati.restaurantgenie.Model.MyResponse;
 import com.MohammadSharabati.restaurantgenie.Model.Order;
 import com.MohammadSharabati.restaurantgenie.Model.Request;
 import com.MohammadSharabati.restaurantgenie.Model.Token;
+import com.MohammadSharabati.restaurantgenie.Model.User;
 import com.MohammadSharabati.restaurantgenie.Remote.APIService;
 import com.MohammadSharabati.restaurantgenie.ViewHolder.CartAdapter;
 import com.MohammadSharabati.restaurantgenie.ViewHolder.CartViewHolder;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,6 +70,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseDatabase database;
     private DatabaseReference requests;
+    private DatabaseReference foods;
     public TextView txtTotalPlace;
     private FButton btnPlace;
     private List<Order> cart = new ArrayList<>();
@@ -85,9 +91,11 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
         mService = Common.getFCMService();
 
+
         //Init Firebase
         database = FirebaseDatabase.getInstance();
         requests = database.getReference().child("RestaurantGenie").child(Common.currentUser.getBusinessNumber()).child("Requests");
+        foods = database.getReference().child("RestaurantGenie").child(Common.currentUser.getBusinessNumber()).child("Foods");
 
         //Init
         recyclerView = (RecyclerView) findViewById(R.id.listCart);
@@ -112,14 +120,14 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 //Create new Request
                 if (cart.size() > 0) {
                     showAlertDialog();
-                }
-                else
+                } else
                     Toast.makeText(Cart.this, "Your cart is empty !!!", Toast.LENGTH_SHORT).show();
             }
         });
 
         loadListFood();
     }
+
     /**
      * Showing alert dialog
      */
@@ -144,14 +152,13 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 // Create new Resquest
-                    Request request = new Request(
-                            Common.currentUser.getPhone(),
-                            Common.currentUser.getName(),
-                            edtNote.getText().toString(),
-                            txtTotalPlace.getText().toString(),
-                            cart
-                    );
-
+                Request request = new Request(
+                        Common.currentUser.getPhone(),
+                        Common.currentUser.getName(),
+                        edtNote.getText().toString(),
+                        txtTotalPlace.getText().toString(),
+                        cart
+                );
                 // Submit to Firebase
                 // We Will using System.CurrentMilli to key
 
@@ -161,14 +168,50 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
-//                sendNotification(order_number);
+                        for (int run = 0; run < request.getFoods().size(); run++) {
+                            Order orderRequest = request.getFoods().get(run);
+
+                            foods.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshotFoods : dataSnapshot.getChildren()) {
+
+                                        Food modelFood = snapshotFoods.getValue(Food.class);
+                                        if (modelFood.getName().equals(orderRequest.getProductName())) {
+                                            int changeCount = Integer.parseInt(modelFood.getCounter()) + Integer.parseInt(orderRequest.getQuantity());
+
+                                            Food tempFood = new Food(modelFood.getName(), modelFood.getImage(), modelFood.getDescription(),
+                                                    modelFood.getPrice(), modelFood.getDiscount(), modelFood.getMenuId(), String.valueOf(changeCount));
+
+
+                                            foods.child(snapshotFoods.getKey()).setValue(tempFood)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
 
                         Toast.makeText(Cart.this, "Thank you, order place", Toast.LENGTH_SHORT).show();
                         finish();
+
+                        //Delete Cart
+                        new Database(Cart.this).cleanCart(Common.currentUser.getPhone());
+                        sendNotification(order_number);
                     }
                 });
-                //Delete Cart
-                new Database(Cart.this).cleanCart(Common.currentUser.getPhone());
+
             }
         });
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -179,6 +222,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         });
         alertDialog.show();
     }
+
 
     private void sendNotification(final String order_number) {
         DatabaseReference tokens = database.getReference().child("RestaurantGenie").child(Common.currentUser.getBusinessNumber()).child("Tokens");
@@ -219,6 +263,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                             }
                         });
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -329,4 +374,5 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             snackbar.show();
         }
     }
+
 }
