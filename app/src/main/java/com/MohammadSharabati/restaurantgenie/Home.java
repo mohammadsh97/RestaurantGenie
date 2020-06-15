@@ -107,13 +107,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (Common.isConnectedToInternet(this)) {
             loadMenu();
-            updateToken(FirebaseInstanceId.getInstance().getToken());
+
         } else {
             Toast.makeText(this, "Please check your network connection", Toast.LENGTH_SHORT).show();
             return;
         }
 
-
+        updateToken(FirebaseInstanceId.getInstance().getToken());
     }
 
     private void updateToken(String token) {
@@ -159,7 +159,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         };
 
         adapter.startListening();
-        adapter.notifyDataSetChanged(); // Refresh data if have data changed
+//        adapter.notifyDataSetChanged(); // Refresh data if have data changed
         recycler_menu.setAdapter(adapter);
     }
 
@@ -183,7 +183,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Log.v("TAG" , "Home => onResume");
         fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
         adapter.startListening();
-        adapter.notifyDataSetChanged(); // Refresh data if have data changed
+//        adapter.notifyDataSetChanged(); // Refresh data if have data changed
         recycler_menu.setAdapter(adapter);
     }
 

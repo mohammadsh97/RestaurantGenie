@@ -3,7 +3,7 @@ package com.MohammadSharabati.restaurantgenie.Model;
  * Created by Mohammad Sharabati.
  */
 public class Food {
-    private String Name, Image, Description, Price, Discount, MenuId;
+    private String Name, Image, Description, Price, Discount, MenuId,Counter;
 
     public Food() {
     }
@@ -15,6 +15,24 @@ public class Food {
         this.Price = price;
         this.Discount = discount;
         this.MenuId = menuId;
+        this.Counter = "0";
+    }
+    public Food(String name, String image, String description, String price, String discount, String menuId , String counter) {
+        this.Name = name;
+        this.Image = image;
+        this.Description = description;
+        this.Price = price;
+        this.Discount = discount;
+        this.MenuId = menuId;
+        this.Counter = counter;
+    }
+
+    public String getCounter() {
+        return Counter;
+    }
+
+    public void setCounter(String counter) {
+        Counter = counter;
     }
 
     public String getName() {
