@@ -15,7 +15,7 @@ import com.MohammadSharabati.restaurantgenie.ViewHolder.OrderDetailAdapter;
  */
 
 public class OrderDetail extends AppCompatActivity {
-    private TextView order_id, order_phone, order_note, order_total;
+    private TextView order_id, order_table, order_note, order_total;
     private String order_id_value = "";
     private RecyclerView lstFood;
     private RecyclerView.LayoutManager layoutManager;
@@ -26,7 +26,7 @@ public class OrderDetail extends AppCompatActivity {
         setContentView(R.layout.activity_order_detail);
 
         order_id = (TextView) findViewById(R.id.order_id);
-        order_phone = (TextView) findViewById(R.id.order_phone);
+        order_table = (TextView) findViewById(R.id.order_table);
         order_note = (TextView) findViewById(R.id.order_note);
         order_total = (TextView) findViewById(R.id.order_total);
 
@@ -40,7 +40,7 @@ public class OrderDetail extends AppCompatActivity {
 
         //Set Value
         order_id.setText(order_id_value);
-        order_phone.setText(Common.currentRequest.getPhone());
+        order_table.setText(Common.currentRequest.getName());
         order_total.setText(Common.currentRequest.getTotal());
         order_note.setText(Common.currentRequest.getNote());
 

@@ -224,7 +224,7 @@ public class FoodDetail extends AppCompatActivity  implements RatingDialogListen
     public void onPositiveButtonClicked(int value, String comments) {
 
         //Rating
-        final Rating rating = new Rating(Common.currentUser.getPhone(),
+        final Rating rating = new Rating(Common.currentUser.getName(),
                 foodId,
                 String.valueOf(value),
                 comments);

@@ -59,12 +59,12 @@
                     android:textStyle="italic"/>
 
                 <TextView
-                    android:id="@+id/order_phone"
+                    android:id="@+id/order_table"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical|start"
-                    android:text="123456789"
+                    android:text="Table1"
                     android:textAllCaps="true"
                     android:textStyle="italic"/>
 

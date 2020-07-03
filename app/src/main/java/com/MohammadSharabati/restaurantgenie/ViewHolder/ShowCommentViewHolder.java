@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class ShowCommentViewHolder extends RecyclerView.ViewHolder  {
-    public TextView txtUserPhone, txtComment;
+    public TextView txtUserName, txtComment;
     public RatingBar ratingBar;
 
     public ShowCommentViewHolder(View itemView) {
         super(itemView);
-        txtUserPhone = (TextView) itemView.findViewById(R.id.txtUserPhone);
+        txtUserName = (TextView) itemView.findViewById(R.id.txtUserName);
         txtComment = (TextView) itemView.findViewById(R.id.txtComment);
         ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
 
