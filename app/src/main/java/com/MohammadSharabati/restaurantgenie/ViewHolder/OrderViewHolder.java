@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView txtOrderId, txtOrderDate, txtOrderStatus, txtOrderPhone, txtOrderNote;
+    public TextView txtOrderId, txtOrderDate, txtOrderStatus, order_table, txtOrderNote;
     public Button btnDetail;
 
     private ItemClickListener itemClickListener;
@@ -24,7 +24,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         txtOrderId = (TextView) itemView.findViewById(R.id.order_id);
         txtOrderDate = (TextView) itemView.findViewById(R.id.order_date);
         txtOrderStatus = (TextView) itemView.findViewById(R.id.order_status);
-        txtOrderPhone = (TextView) itemView.findViewById(R.id.order_phone);
+        order_table = (TextView) itemView.findViewById(R.id.order_table);
         txtOrderNote = (TextView) itemView.findViewById(R.id.order_note);
 
         btnDetail = (Button) itemView.findViewById(R.id.btnDetail);

@@ -90,7 +90,7 @@ public class ShowComment extends AppCompatActivity {
                         @Override
                         protected void onBindViewHolder(@NonNull ShowCommentViewHolder holder, int position, @NonNull Rating model) {
                             holder.ratingBar.setRating(Float.parseFloat(model.getRateValue()));
-                            holder.txtUserPhone.setText(model.getUserPhone());
+                            holder.txtUserName.setText(model.getUserName());
                             holder.txtComment.setText(model.getComment());
                         }
 
@@ -128,7 +128,7 @@ public class ShowComment extends AppCompatActivity {
                         @Override
                         protected void onBindViewHolder(@NonNull ShowCommentViewHolder holder, int position, @NonNull Rating model) {
                             holder.ratingBar.setRating(Float.parseFloat(model.getRateValue()));
-                            holder.txtUserPhone.setText(model.getUserPhone());
+                            holder.txtUserName.setText(model.getUserName());
                             holder.txtComment.setText(model.getComment());
                         }
 
