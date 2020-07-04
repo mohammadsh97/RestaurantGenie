@@ -1,30 +1,26 @@
 package com.MohammadSharabati.restaurantgenie;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Model.Token;
+import com.MohammadSharabati.restaurantgenie.ViewHolder.MenuAdapter;
 import com.andremion.counterfab.CounterFab;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.MohammadSharabati.restaurantgenie.Common.Common;
-import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
 import com.MohammadSharabati.restaurantgenie.Model.Category;
-import com.MohammadSharabati.restaurantgenie.ViewHolder.MenuViewHolder;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.squareup.picasso.Picasso;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -34,9 +30,10 @@ import io.paperdb.Paper;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import android.view.Menu;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Mohammad Sharabati.
@@ -50,8 +47,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private TextView txtFullName;
     private RecyclerView recycler_menu;
     private RecyclerView.LayoutManager layoutManager;
-    private FirebaseRecyclerOptions<Category> options;
-    private FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter = null;
+    private MenuAdapter menuAdapter;
+    private List<Category> categoryList;
+    private List<String> keysList;
+
     private CounterFab fab;
 
     @Override
@@ -68,7 +67,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 .setDefaultFontPath("fonts/restaurant_font.otf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
-
 
         Paper.init(this);
 
@@ -112,10 +110,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-        if (Common.isConnectedToInternet(this)) {
+        if (Common.isConnectedToInternet(this))
             loadMenu();
-
-        } else {
+        else {
             Toast.makeText(this, "Please check your network connection", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -132,71 +129,53 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void loadMenu() {
-        options = new FirebaseRecyclerOptions.Builder<Category>()
-                .setQuery(category, Category.class)
-                .build();
 
-        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
+        categoryList = new ArrayList<>();
+        keysList = new ArrayList<>();
+
+        category.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
-                Picasso.with(getBaseContext())
-                        .load(model.getImage())
-                        .into(holder.imageView);
-                holder.txtMenuName.setText(model.getName());
-                holder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        //Get CategoryId and send to new Activity
-                        Intent foodList = new Intent(Home.this, FoodList.class);
-                        //Because CategoryId is key, so we just get key of this item
-                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
-                        Log.d("CategoryId", adapter.getRef(position).getKey());
-                        startActivity(foodList);
-                    }
-                });
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    categoryList.add(snapshot.getValue(Category.class));
+                    keysList.add(snapshot.getKey());
+                }
+
+                menuAdapter = new MenuAdapter(getApplicationContext(), categoryList, keysList);
+                recycler_menu.setAdapter(menuAdapter);
             }
 
-            @NonNull
             @Override
-            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.menu_item, parent, false);
-                return new MenuViewHolder(view);
-            }
-        };
+            public void onCancelled(DatabaseError databaseError) {
 
-        adapter.startListening();
-//        adapter.notifyDataSetChanged(); // Refresh data if have data changed
-        recycler_menu.setAdapter(adapter);
+            }
+        });
     }
-
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.v("TAG" , "Home => onStop");
+        Log.v("TAG", "Home => onStop");
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v("TAG" , "Home => onStart");
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        Log.v("TAG" , "Home => onStart");
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v("TAG", "Home => onResume");
         fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
-        adapter.startListening();
-//        adapter.notifyDataSetChanged(); // Refresh data if have data changed
-        recycler_menu.setAdapter(adapter);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.v("TAG" , "Home => onDestroy");
+        Log.v("TAG", "Home => onDestroy");
     }
 
     @Override
@@ -230,10 +209,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         int id = item.getItemId();
 
         if (id == R.id.nav_menu) {
-            adapter.startListening();
-            recycler_menu.setAdapter(adapter);
-            recycler_menu.getAdapter().notifyDataSetChanged();
-//            recycler_menu.scheduleLayoutAnimation();
 
         } else if (id == R.id.nav_cart) {
             Intent cartIntent = new Intent(Home.this, Cart.class);
@@ -245,7 +220,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(orderIntent);
 
         } else if (id == R.id.nav_log_out) {
-
             //Delete Remember user
             Paper.book().destroy();
 

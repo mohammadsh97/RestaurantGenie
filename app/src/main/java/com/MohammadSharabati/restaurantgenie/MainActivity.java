@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             mDialog.setMessage("Please waiting...");
             mDialog.show();
             if (BusinessNumber.trim().length() != 0) {
-                table_user.addValueEventListener(new ValueEventListener() {
+                table_user.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.child(BusinessNumber).exists()) {

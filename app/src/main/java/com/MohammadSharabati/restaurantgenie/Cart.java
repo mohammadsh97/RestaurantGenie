@@ -73,7 +73,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     private DatabaseReference foods;
     public TextView txtTotalPlace;
     private FButton btnPlace;
-    private List<Order> cart = new ArrayList<>();
+    public static List<Order> cart = new ArrayList<>();
     private CartAdapter adapter;
     APIService mService;
     private RelativeLayout rootLayout;
@@ -150,9 +150,16 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                dialogInterface.dismiss();
                 // Create new Resquest
-                Request request = new Request(
+//                Request request = new Request(
+//                        Common.currentUser.getPhone(),
+//                        Common.currentUser.getName(),
+//                        edtNote.getText().toString(),
+//                        txtTotalPlace.getText().toString(),
+//                        cart
+//                );
+                Common.request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
                         edtNote.getText().toString(),
@@ -164,47 +171,54 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
                 String order_number = String.valueOf(System.currentTimeMillis());
 
-                requests.child(order_number).setValue(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+                requests.child(order_number).setValue(Common.request).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
-                        for (int run = 0; run < request.getFoods().size(); run++) {
-                            Order orderRequest = request.getFoods().get(run);
+                        Common.completeListener(foods);
 
-                            foods.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshotFoods : dataSnapshot.getChildren()) {
-
-                                        Food modelFood = snapshotFoods.getValue(Food.class);
-                                        if (modelFood.getName().equals(orderRequest.getProductName())) {
-                                            int changeCount = Integer.parseInt(modelFood.getCounter()) + Integer.parseInt(orderRequest.getQuantity());
-
-                                            Food tempFood = new Food(modelFood.getName(), modelFood.getImage(), modelFood.getDescription(),
-                                                    modelFood.getPrice(), modelFood.getDiscount(), modelFood.getMenuId(), String.valueOf(changeCount));
-
-
-                                            foods.child(snapshotFoods.getKey()).setValue(tempFood)
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-
-                                                        }
-                                                    });
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-
-
+//                        for (int run = 0; run < request.getFoods().size(); run++) {
+//                            Order orderRequest = request.getFoods().get(run);
+//
+//                            foods.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                    for (DataSnapshot snapshotFoods : dataSnapshot.getChildren()) {
+//
+//                                        Food modelFood = snapshotFoods.getValue(Food.class);
+//                                        if (modelFood.getName().equals(orderRequest.getProductName())) {
+//                                            int changeCount = Integer.parseInt(modelFood.getCounter()) + Integer.parseInt(orderRequest.getQuantity());
+//
+//                                            Food tempFood = new Food(modelFood.getName(), modelFood.getImage(), modelFood.getDescription(),
+//                                                    modelFood.getPrice(), modelFood.getDiscount(), modelFood.getMenuId(), String.valueOf(changeCount));
+//
+//
+//                                            foods.child(snapshotFoods.getKey()).setValue(tempFood)
+//                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                        @Override
+//                                                        public void onComplete(@NonNull Task<Void> task) {
+//                                                            Log.v("mohammad" , "dont wary");
+//                                                        }
+//                                                    });
+//                                        }
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(DatabaseError databaseError) {
+//
+//                                }
+//                            });
+//                        }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
                         Toast.makeText(Cart.this, "Thank you, order place", Toast.LENGTH_SHORT).show();
-                        finish();
+//                        finish();
+
+                        //Get CategoryId and send to new Activity
+                        Intent foodList = new Intent(Cart.this, Home.class);
+
+                        startActivity(foodList);
+
 
                         //Delete Cart
                         new Database(Cart.this).cleanCart(Common.currentUser.getPhone());
