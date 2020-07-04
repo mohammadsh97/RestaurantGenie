@@ -3,12 +3,10 @@ package com.MohammadSharabati.restaurantgenie.Common;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
 import com.MohammadSharabati.restaurantgenie.Model.Request;
 import com.MohammadSharabati.restaurantgenie.Model.User;
 import com.MohammadSharabati.restaurantgenie.Remote.APIService;
 import com.MohammadSharabati.restaurantgenie.Remote.RetrofitClient;
-
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -58,7 +56,6 @@ public class Common {
                             && info[i].isConnected()) {
                         return true;
                     }
-
         }
         return false;
     }
