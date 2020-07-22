@@ -30,7 +30,6 @@ public class SignIn extends AppCompatActivity {
     private MaterialEditText edtBusinessNumber, edtName, edtPassword;
     private Button btnSignIn;
     CheckBox ckbRemember;
-//    TextView txtForgotPwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +43,10 @@ public class SignIn extends AppCompatActivity {
         edtPassword = (MaterialEditText) findViewById(R.id.edtPassword);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
         ckbRemember = (CheckBox) findViewById(R.id.ckbRemember);
-//        txtForgotPwd =(TextView) findViewById(R.id.txtForgotPwd);
-
 
         //Int Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference table_user = database.getReference("RestaurantGenie");
-
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +59,7 @@ public class SignIn extends AppCompatActivity {
                     mDialog.show();
 
                     if (edtBusinessNumber.getText().toString().trim().length() != 0) {
-                        table_user.addValueEventListener(new ValueEventListener() {
+                        table_user.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.child(edtBusinessNumber.getText().toString()).exists()) {

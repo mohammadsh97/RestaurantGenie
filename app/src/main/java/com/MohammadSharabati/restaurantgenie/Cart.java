@@ -73,7 +73,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     private DatabaseReference foods;
     public TextView txtTotalPlace;
     private FButton btnPlace;
-    private List<Order> cart = new ArrayList<>();
+    public static List<Order> cart = new ArrayList<>();
     private CartAdapter adapter;
     APIService mService;
     private RelativeLayout rootLayout;
@@ -90,7 +90,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         setContentView(R.layout.activity_cart);
 
         mService = Common.getFCMService();
-
 
         //Init Firebase
         database = FirebaseDatabase.getInstance();
@@ -109,7 +108,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         // Swipe to Delete
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-
 
         /**
          * Clicking Place Order button
@@ -150,9 +148,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
-                // Create new Resquest
-                Request request = new Request(
+                dialogInterface.dismiss();
+                Common.request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
                         edtNote.getText().toString(),
@@ -164,47 +161,17 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
                 String order_number = String.valueOf(System.currentTimeMillis());
 
-                requests.child(order_number).setValue(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+                requests.child(order_number).setValue(Common.request).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
-                        for (int run = 0; run < request.getFoods().size(); run++) {
-                            Order orderRequest = request.getFoods().get(run);
-
-                            foods.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshotFoods : dataSnapshot.getChildren()) {
-
-                                        Food modelFood = snapshotFoods.getValue(Food.class);
-                                        if (modelFood.getName().equals(orderRequest.getProductName())) {
-                                            int changeCount = Integer.parseInt(modelFood.getCounter()) + Integer.parseInt(orderRequest.getQuantity());
-
-                                            Food tempFood = new Food(modelFood.getName(), modelFood.getImage(), modelFood.getDescription(),
-                                                    modelFood.getPrice(), modelFood.getDiscount(), modelFood.getMenuId(), String.valueOf(changeCount));
-
-
-                                            foods.child(snapshotFoods.getKey()).setValue(tempFood)
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-
-                                                        }
-                                                    });
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-
-
+                        Common.completeListener(foods);
                         Toast.makeText(Cart.this, "Thank you, order place", Toast.LENGTH_SHORT).show();
-                        finish();
+
+                        //Get CategoryId and send to new Activity
+                        Intent foodList = new Intent(Cart.this, Home.class);
+
+                        startActivity(foodList);
 
                         //Delete Cart
                         new Database(Cart.this).cleanCart(Common.currentUser.getPhone());
@@ -259,17 +226,13 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
                             @Override
                             public void onFailure(Call<MyResponse> call, Throwable t) {
-                                Log.e("ERROR", t.getMessage());
                             }
                         });
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
     }
 
     /**
@@ -290,12 +253,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
-
-        Locale locale = new Locale("en", "ILS");
-        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-
-//        viewHolder.food_price_item.setText(String.format("₪ %s", model.getPrice()));
-//        txtTotalPlace.setText(fmt.format(total));
         txtTotalPlace.setText(String.format("₪ %s", total));
     }
 
@@ -304,7 +261,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getTitle().equals(Common.DELETE))
             deleteCart(item.getOrder());
-
         return true;
     }
 
@@ -343,10 +299,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             for (Order item : orders)
                 total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
 
-//            Locale locale = new Locale("en", "ILS");
-//            NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-//            txtTotalPlace.setText(fmt.format(total));
-
             txtTotalPlace.setText(String.format("₪ %s", total));
 
             //SnackBar
@@ -363,10 +315,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                     for (Order item : orders)
                         total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
 
-//                    Locale locale = new Locale("en", "ILS");
-//                    NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-//                    txtTotalPlace.setText(fmt.format(total));
-
                     txtTotalPlace.setText(String.format("₪ %s", total));
                 }
             });
@@ -374,5 +322,4 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             snackbar.show();
         }
     }
-
 }

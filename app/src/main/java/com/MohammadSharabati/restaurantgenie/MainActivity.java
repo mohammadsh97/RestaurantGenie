@@ -34,15 +34,6 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    private FirebaseRecyclerOptions<Category> options;
-    private FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
-    private FirebaseDatabase database2;
-    private DatabaseReference category;
-    private RecyclerView recycler_menu;
-    private RecyclerView.LayoutManager layoutManager;
-
-
     private FirebaseDatabase database;
     private DatabaseReference table_user;
 
@@ -79,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             mDialog.setMessage("Please waiting...");
             mDialog.show();
             if (BusinessNumber.trim().length() != 0) {
-                table_user.addValueEventListener(new ValueEventListener() {
+                table_user.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.child(BusinessNumber).exists()) {
@@ -124,11 +115,5 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
             return;
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v("TAG" , "MainActivity => onResume");
     }
 }
