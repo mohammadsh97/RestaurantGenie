@@ -7,7 +7,6 @@ import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Model.Token;
 import com.MohammadSharabati.restaurantgenie.ViewHolder.MenuAdapter;
 import com.andremion.counterfab.CounterFab;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -116,7 +115,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             Toast.makeText(this, "Please check your network connection", Toast.LENGTH_SHORT).show();
             return;
         }
-
         updateToken(FirebaseInstanceId.getInstance().getToken());
     }
 
@@ -133,16 +131,20 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         categoryList = new ArrayList<>();
         keysList = new ArrayList<>();
 
-        category.addListenerForSingleValueEvent(new ValueEventListener() {
+        menuAdapter = new MenuAdapter(getApplicationContext(), categoryList, keysList);
+        recycler_menu.setAdapter(menuAdapter);
+
+        category.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                categoryList.clear();
+                keysList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     categoryList.add(snapshot.getValue(Category.class));
                     keysList.add(snapshot.getKey());
                 }
+                menuAdapter.notifyDataSetChanged();
 
-                menuAdapter = new MenuAdapter(getApplicationContext(), categoryList, keysList);
-                recycler_menu.setAdapter(menuAdapter);
             }
 
             @Override
@@ -156,26 +158,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onStop() {
         super.onStop();
-        Log.v("TAG", "Home => onStop");
     }
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        Log.v("TAG" , "Home => onStart");
-//    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v("TAG", "Home => onResume");
         fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.v("TAG", "Home => onDestroy");
     }
 
     @Override

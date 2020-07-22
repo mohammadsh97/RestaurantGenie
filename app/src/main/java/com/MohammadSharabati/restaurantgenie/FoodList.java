@@ -13,12 +13,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.MohammadSharabati.restaurantgenie.Common.Common;
 import com.MohammadSharabati.restaurantgenie.Database.Database;
 import com.MohammadSharabati.restaurantgenie.Interface.ItemClickListener;
@@ -44,7 +42,6 @@ import java.util.List;
  * Created by Mohammad Sharabati.
  * Loading food list by categoryId
  */
-
 
 public class FoodList extends AppCompatActivity {
 
@@ -337,27 +334,5 @@ public class FoodList extends AppCompatActivity {
             }
         });
 
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.v("TAG" , "FoodList => onStop");
-        adapter.stopListening();
-        if (searchAdapter != null)
-            searchAdapter.stopListening();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v("TAG" , "FoodList => onResume");
-        if (adapter != null) {
-            Log.v("TAG" , "FoodList => adapter != null => onResume");
-            adapter.startListening();
-        }
-        if (searchAdapter != null)
-            searchAdapter.startListening();
     }
 }

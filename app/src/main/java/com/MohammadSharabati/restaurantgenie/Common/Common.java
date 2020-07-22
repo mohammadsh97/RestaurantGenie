@@ -15,10 +15,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.Calendar;
 import java.util.Locale;
-
 import androidx.annotation.NonNull;
 
 /**
@@ -43,7 +41,6 @@ public class Common {
     public static APIService getFCMService() {
         return RetrofitClient.getClient(BASE_URL).create(APIService.class);
     }
-
 
     public static String convertCodeToStatus(String status) {
         switch (status) {
@@ -74,7 +71,6 @@ public class Common {
     public static String getDate(long time) {
         Calendar calendar = Calendar.getInstance(Locale.KOREA);
         calendar.setTimeInMillis(time);
-
         return android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", calendar).toString();
     }
 
@@ -100,13 +96,11 @@ public class Common {
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-
                                         }
                                     });
                         }
                     }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
